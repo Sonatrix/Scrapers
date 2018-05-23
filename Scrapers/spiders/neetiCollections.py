@@ -36,4 +36,8 @@ class NeetiSpider(scrapy.Spider):
         item["date_sale_to"] =  dt.today()
         item["enabled"] = True
         item["discontinued"] = False
+        item["stock_quantity"] = 5
+        item["created_at"] = dt.utcnow()
+        item["updated_at"] = dt.utcnow()
+        item["category_id"] = "59982ba5e8c043022cb53a72"
         yield item

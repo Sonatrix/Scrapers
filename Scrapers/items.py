@@ -42,3 +42,5 @@ class Product(scrapy.Item):
     dimensions = scrapy.Field()
     external_url = scrapy.Field()  # external Product url
     external_images = scrapy.Field()  # array of images
+    created_at = scrapy.Field()  # created date
+    updated_at = scrapy.Field()
