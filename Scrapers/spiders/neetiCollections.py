@@ -23,21 +23,10 @@ class NeetiSpider(scrapy.Spider):
             return response.css(query).extract_first()
         item = Product()
         item["name"] = extract_with_css('h1::text')
-        item["code"] = response.url
-        item["external_url"] = response.url
-        item["cost_price"] = float(extract_with_css('span.price::text').replace("₹",""))
-        item["regular_price"] = float(extract_with_css('span.price::text').replace("₹",""))
-        item["sale_price"] = float(extract_with_css('span.price::text').replace("₹",""))
+        item["storeUrl"] = response.url
+        item["old_price"] = float(extract_with_css('span.price::text').replace("₹",""))
+        item["price"] = float(extract_with_css('span.price::text').replace("₹",""))
         item["description"] = extract_with_css('p.form-group::text')
-        item["meta_description"] = extract_with_css('p.form-group::text')
-        item["slug"] = item["name"]
-        item["date_stock_expected"] = dt.today()
-        item["date_sale_from"] = dt.today()
-        item["date_sale_to"] =  dt.today()
-        item["enabled"] = True
-        item["discontinued"] = False
-        item["stock_quantity"] = 5
-        item["created_at"] = dt.utcnow()
-        item["updated_at"] = dt.utcnow()
-        item["category_id"] = "59982ba5e8c043022cb53a72"
+        item["category"] = "d05a20dac39f4c63a135d1de6c7a5577"
+        item["images"] = extract_with_css('div.large-image img::attr(src)')
         yield item

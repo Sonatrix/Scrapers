@@ -5,46 +5,34 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
-from bson import json_util
-import json
-
-# class JsonWriterPipeline(object):
-
-#     def open_spider(self, spider):
-#         self.file = open('sarees.json', 'w')
-
-#     def close_spider(self, spider):
-#         self.file.close()
-
-#     def process_item(self, item, spider):
-#         line = json.dumps(dict(item), default=json_util.default) + "\n"
-#         self.file.write(line)
-#         return item
-
-import pymongo
+import MySQLdb
 
 class MongoPipeline(object):
 
     collection_name = 'products'
 
-    def __init__(self, mongo_uri, mongo_db):
-        self.mongo_uri = mongo_uri
-        self.mongo_db = mongo_db
+    def __init__(self, host, user, password, database):
+        self.host = host
+        self.user = user
+        self.password = password
+        self.database = database
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(
-            mongo_uri=crawler.settings.get('MONGO_URI'),
-            mongo_db=crawler.settings.get('MONGO_DATABASE', 'items')
+            host=crawler.settings.get('host', 'localhost'),
+            user=crawler.settings.get('username', 'admin'),
+            password=crawler.settings.get('password', '12345'),
+            database=crawler.settings.get('database', 'locator')
         )
 
     def open_spider(self, spider):
-        self.client = pymongo.MongoClient(self.mongo_uri)
-        self.db = self.client[self.mongo_db]
+        self.client = MySQLdb.connect(self.host, self.user, self.password, self.database)
+        self.db = self.client.cursor()
 
     def close_spider(self, spider):
         self.client.close()
 
     def process_item(self, item, spider):
-        self.db[self.collection_name].insert_one(dict(item))
+        # self.db.execute("insert into product(name, description, category, price, price_old, storeUrl, images) values({name}, {description}, {category}, {price}, {price_old}, {storeUrl}, {images})".format(name=item["name"], description=item["description"], category=item["category"], price=item["price"], price_old=item["price_old"], storeUrl=item["storeUrl"], images=item["images"]))
         return item
