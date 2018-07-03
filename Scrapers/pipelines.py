@@ -6,6 +6,7 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import MySQLdb
+import uuid
 
 class MongoPipeline(object):
 
@@ -27,12 +28,13 @@ class MongoPipeline(object):
         )
 
     def open_spider(self, spider):
-        self.client = MySQLdb.connect(self.host, self.user, self.password, self.database)
+        self.client = MySQLdb.connect(self.host, self.user, self.password, self.database, charset='utf8')
         self.db = self.client.cursor()
 
     def close_spider(self, spider):
         self.client.close()
 
     def process_item(self, item, spider):
-        # self.db.execute("insert into product(name, description, category, price, price_old, storeUrl, images) values({name}, {description}, {category}, {price}, {price_old}, {storeUrl}, {images})".format(name=item["name"], description=item["description"], category=item["category"], price=item["price"], price_old=item["price_old"], storeUrl=item["storeUrl"], images=item["images"]))
+        self.db.execute("insert into product(id, name, description, category_id, price, old_price, storeUrl, images) values('{id}','{name}', '{description}', '{category}', '{price}', '{old_price}', '{storeUrl}', '{images}')".format(id=uuid.uuid4().hex, name=item["name"], description=item["description"], category=item["category"], price=item["price"], old_price=item["old_price"], storeUrl=item["storeUrl"], images=item["images"]))
+        self.client.commit()
         return item
