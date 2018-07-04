@@ -12,7 +12,7 @@ class Product(scrapy.Item):
     # define the fields for your item here like:
     name = scrapy.Field()   # name of the product
     description = scrapy.Field()   # description of product
-   
+    meta_description = scrapy.Field()   # description of product
     price = scrapy.Field()  # list of prices
     old_price = scrapy.Field()  # float value
     updated_at = scrapy.Field()  # sale date

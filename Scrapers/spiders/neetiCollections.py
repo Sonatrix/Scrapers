@@ -27,6 +27,7 @@ class NeetiSpider(scrapy.Spider):
         item["old_price"] = float(extract_with_css('span.price::text').replace("₹",""))
         item["price"] = float(extract_with_css('span.price::text').replace("₹",""))
         item["description"] = extract_with_css('p.form-group::text')
+        item["meta_description"] = item["description"][:30]+"..."
         item["category"] = "d05a20dac39f4c63a135d1de6c7a5577"
         item["images"] = extract_with_css('div.large-image img::attr(src)')
         yield item

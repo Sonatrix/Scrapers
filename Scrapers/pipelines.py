@@ -35,6 +35,6 @@ class MongoPipeline(object):
         self.client.close()
 
     def process_item(self, item, spider):
-        self.db.execute("insert into product(id, name, description, category_id, price, old_price, storeUrl, images) values('{id}','{name}', '{description}', '{category}', '{price}', '{old_price}', '{storeUrl}', '{images}')".format(id=uuid.uuid4().hex, name=item["name"], description=item["description"], category=item["category"], price=item["price"], old_price=item["old_price"], storeUrl=item["storeUrl"], images=item["images"]))
+        self.db.execute("insert into product(id, name, description, meta_description, category_id, price, old_price, storeUrl, images) values('{id}','{name}', '{description}','{meta_description}', '{category}', '{price}', '{old_price}', '{storeUrl}', '{images}')".format(id=uuid.uuid4().hex, name=item["name"], description=item["description"], meta_description=item["meta_description"], category=item["category"], price=item["price"], old_price=item["old_price"], storeUrl=item["storeUrl"], images=item["images"]))
         self.client.commit()
         return item
