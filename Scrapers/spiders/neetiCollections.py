@@ -1,5 +1,7 @@
 from datetime import datetime as dt
 import scrapy
+import uuid
+from django.utils.text import slugify
 from Scrapers.items import Product
 
 class NeetiSpider(scrapy.Spider):
@@ -20,14 +22,19 @@ class NeetiSpider(scrapy.Spider):
 
     def parse_author(self, response):
         def extract_with_css(query):
-            return response.css(query).extract_first()
+            return response.css(query).extract_first() 
         item = Product()
+        item["id"] = uuid.uuid4().hex
         item["name"] = extract_with_css('h1::text')
         item["storeUrl"] = response.url
         item["old_price"] = float(extract_with_css('span.price::text').replace("₹",""))
         item["price"] = float(extract_with_css('span.price::text').replace("₹",""))
+
+        if item["price"] is None:
+            return None
         item["description"] = extract_with_css('p.form-group::text')
         item["meta_description"] = item["description"][:30]+"..."
         item["category"] = "d05a20dac39f4c63a135d1de6c7a5577"
         item["images"] = extract_with_css('div.large-image img::attr(src)')
+        item["slug"] = f'{slugify(item["name"])}-{item["id"][1:6]}'
         yield item
