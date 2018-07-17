@@ -6,6 +6,7 @@ from Scrapers.items import Product
 
 class MirrawSpider(scrapy.Spider):
     name = "mirraw_sarees"
+    brandName = "Mirraw"
     start_urls = [
         'https://www.mirraw.com/store/sarees',
         'https://www.mirraw.com/store/sarees?min_price=1350&max_price=3825&sort=bstslr&created_at=45&icn=saree_1&ici=bestsellingsarees',
@@ -39,4 +40,7 @@ class MirrawSpider(scrapy.Spider):
         item["category"] = "50d42760c3ce4a32a31d75a9add01d64"
         item["images"] = extract_with_css('#design_gallery a::attr(data-image)')
         item["slug"] = f'{slugify(item["name"])}-{item["id"][1:6]}'
+        item["sender"] = self.name
+        item["brand"] = self.brandName
+        
         yield item

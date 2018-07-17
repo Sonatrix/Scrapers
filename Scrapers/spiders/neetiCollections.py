@@ -5,7 +5,8 @@ from django.utils.text import slugify
 from Scrapers.items import Product
 
 class NeetiSpider(scrapy.Spider):
-    name = "clothing"
+    name = "neeti_kurti"
+    brandName = "Neeti Collections"
     start_urls = [
         'https://www.neeticollections.com/Kurtis',
     ]
@@ -37,4 +38,7 @@ class NeetiSpider(scrapy.Spider):
         item["category"] = "d05a20dac39f4c63a135d1de6c7a5577"
         item["images"] = extract_with_css('div.large-image img::attr(src)')
         item["slug"] = f'{slugify(item["name"])}-{item["id"][1:6]}'
+        item["sender"] = self.name
+        item["brand"] = self.brandName
+        
         yield item

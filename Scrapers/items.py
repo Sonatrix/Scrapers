@@ -22,3 +22,5 @@ class Product(scrapy.Item):
     storeUrl = scrapy.Field()  # external Product url
     images = scrapy.Field()  # array of images
     is_featured = scrapy.Field()  # if featured or not
+    sender = scrapy.Field() #name of sender
+    brand = scrapy.Field() #name of brand
