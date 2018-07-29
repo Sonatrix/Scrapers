@@ -25,7 +25,7 @@ class NeetiSpider(scrapy.Spider):
         def extract_with_css(query):
             return response.css(query).extract_first() 
         item = Product()
-        item["id"] = uuid.uuid4().hex
+        item["id"] = uuid.uuid4()
         item["name"] = extract_with_css('h1::text')
         item["storeUrl"] = response.url
         item["old_price"] = float(extract_with_css('span.price::text').replace("₹",""))
@@ -35,9 +35,9 @@ class NeetiSpider(scrapy.Spider):
             return None
         item["description"] = extract_with_css('p.form-group::text')
         item["meta_description"] = item["description"][:30]+"..."
-        item["category"] = "d05a20dac39f4c63a135d1de6c7a5577"
+        item["category"] = "ccae8991-605d-479d-929c-899e53ccf18a"
         item["images"] = extract_with_css('div.large-image img::attr(src)')
-        item["slug"] = f'{slugify(item["name"])}-{item["id"][1:6]}'
+        item["slug"] = f'{slugify(item["name"])}-{item["id"].__hash__()%100000}'
         item["sender"] = self.name
         item["brand"] = self.brandName
         

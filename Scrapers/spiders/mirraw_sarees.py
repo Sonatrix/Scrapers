@@ -27,7 +27,7 @@ class MirrawSpider(scrapy.Spider):
         def extract_with_css(query):
             return response.css(query).extract_first() 
         item = Product()
-        item["id"] = uuid.uuid4().hex
+        item["id"] = uuid.uuid4()
         item["name"] = extract_with_css('h1::text')
         item["storeUrl"] = response.url
         item["old_price"] = float(extract_with_css('div.old_price_label::text').replace("Rs",""))
@@ -37,9 +37,9 @@ class MirrawSpider(scrapy.Spider):
             yield None
         item["description"] = extract_with_css('div.key_specifications::text')
         item["meta_description"] = item["description"][:50]+"..."
-        item["category"] = "50d42760c3ce4a32a31d75a9add01d64"
+        item["category"] = "4b628369-cf33-449b-a814-08debaeb02ba"
         item["images"] = extract_with_css('#design_gallery a::attr(data-image)')
-        item["slug"] = f'{slugify(item["name"])}-{item["id"][1:6]}'
+        item["slug"] = f'{slugify(item["name"])}-{item["id"].__hash__()%100000}'
         item["sender"] = self.name
         item["brand"] = self.brandName
         

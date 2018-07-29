@@ -5,7 +5,7 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
-import MySQLdb
+import psycopg2
 
 class ProductPipeline(object):
 
@@ -21,19 +21,19 @@ class ProductPipeline(object):
     def from_crawler(cls, crawler):
         return cls(
             host=crawler.settings.get('host', 'localhost'),
-            user=crawler.settings.get('username', 'admin'),
+            user=crawler.settings.get('username', 'postgres'),
             password=crawler.settings.get('password', '12345'),
             database=crawler.settings.get('database', 'locator')
         )
 
     def open_spider(self, spider):
-        self.client = MySQLdb.connect(self.host, self.user, self.password, self.database, charset='utf8')
+        self.client = psycopg2.connect(host=self.host, user=self.user, password=self.password, database=self.database)
         self.db = self.client.cursor()
 
     def close_spider(self, spider):
         self.client.close()
 
     def process_item(self, item, spider):
-        self.db.execute("insert into product(id, name, description, meta_description, category_id, price, old_price, storeUrl, images, slug, sender, brand) values('{id}','{name}', '{description}','{meta_description}', '{category}', '{price}', '{old_price}', '{storeUrl}', '{images}', '{slug}', '{sender}', '{brand}')".format(id=item["id"], name=item["name"], description=item["description"], meta_description=item["meta_description"], category=item["category"], price=item["price"], old_price=item["old_price"], slug=item["slug"], storeUrl=item["storeUrl"], images=item["images"], sender=item["sender"], brand=item["brand"]))
+        self.db.execute("INSERT into product(id, name, description, meta_description, category_id, price, old_price, store_url, images, slug, sender, brand) values('{id}','{name}', '{description}','{meta_description}', '{category}', '{price}', '{old_price}', '{storeUrl}', '{images}', '{slug}', '{sender}', '{brand}')".format(id=item["id"], name=item["name"], description=item["description"], meta_description=item["meta_description"], category=item["category"], price=item["price"], old_price=item["old_price"], slug=item["slug"], storeUrl=item["storeUrl"], images="{"+item["images"]+"}", sender=item["sender"], brand=item["brand"]))
         self.client.commit()
         return item
