@@ -17,10 +17,13 @@ class Product(scrapy.Item):
     meta_description = scrapy.Field()   # description of product
     price = scrapy.Field()  # list of prices
     old_price = scrapy.Field()  # float value
-    updated_at = scrapy.Field()  # sale date
+    updated_at = scrapy.Field()  # updated  date
+    created_at = scrapy.Field()  # created date
     category = scrapy.Field()  # string value
     storeUrl = scrapy.Field()  # external Product url
     images = scrapy.Field()  # array of images
     is_featured = scrapy.Field()  # if featured or not
     sender = scrapy.Field() #name of sender
     brand = scrapy.Field() #name of brand
+    discount = scrapy.Field() #discount applied on product
+    tags = scrapy.Field() #keywords related to product

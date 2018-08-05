@@ -37,3 +37,4 @@ class ProductPipeline(object):
         self.db.execute("INSERT into product(id, name, description, meta_description, category_id, price, old_price, store_url, images, slug, sender, brand) values('{id}','{name}', '{description}','{meta_description}', '{category}', '{price}', '{old_price}', '{storeUrl}', '{images}', '{slug}', '{sender}', '{brand}')".format(id=item["id"], name=item["name"], description=item["description"], meta_description=item["meta_description"], category=item["category"], price=item["price"], old_price=item["old_price"], slug=item["slug"], storeUrl=item["storeUrl"], images="{"+item["images"]+"}", sender=item["sender"], brand=item["brand"]))
         self.client.commit()
         return item
+        

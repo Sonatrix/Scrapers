@@ -6,7 +6,7 @@ from Scrapers.items import Product
 
 class NeetiSpider(scrapy.Spider):
     name = "neeti_kurti"
-    brandName = "Neeti Collections"
+    brandId = "c7e5b9f4-70b1-4a39-a6c5-d6cf128196ad"
     start_urls = [
         'https://www.neeticollections.com/Kurtis',
     ]
@@ -39,6 +39,7 @@ class NeetiSpider(scrapy.Spider):
         item["images"] = extract_with_css('div.large-image img::attr(src)')
         item["slug"] = f'{slugify(item["name"])}-{item["id"].__hash__()%100000}'
         item["sender"] = self.name
-        item["brand"] = self.brandName
+        item["brand"] = self.brandId
         
         yield item
+        
