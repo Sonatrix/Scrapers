@@ -27,3 +27,4 @@ class Product(scrapy.Item):
     brand = scrapy.Field() #name of brand
     discount = scrapy.Field() #discount applied on product
     tags = scrapy.Field() #keywords related to product
+    code = scrapy.Field() #product code

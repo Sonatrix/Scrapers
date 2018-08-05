@@ -34,7 +34,11 @@ class ProductPipeline(object):
         self.client.close()
 
     def process_item(self, item, spider):
-        self.db.execute("INSERT into product(id, name, description, meta_description, category_id, price, old_price, store_url, images, slug, sender, brand) values('{id}','{name}', '{description}','{meta_description}', '{category}', '{price}', '{old_price}', '{storeUrl}', '{images}', '{slug}', '{sender}', '{brand}')".format(id=item["id"], name=item["name"], description=item["description"], meta_description=item["meta_description"], category=item["category"], price=item["price"], old_price=item["old_price"], slug=item["slug"], storeUrl=item["storeUrl"], images="{"+item["images"]+"}", sender=item["sender"], brand=item["brand"]))
-        self.client.commit()
-        return item
-        
+        try:
+            self.db.execute("INSERT into product(id, name, description, meta_description, category_id, price, old_price, store_url, images, slug, sender, brand_id) values('{id}','{name}', '{description}','{meta_description}', '{category}', '{price}', '{old_price}', '{storeUrl}', '{images}', '{slug}', '{sender}', '{brand}')".format(id=item["id"], name=item["name"], description=item["description"], meta_description=item["meta_description"], category=item["category"], price=item["price"], old_price=item["old_price"], slug=item["slug"], storeUrl=item["storeUrl"], images="{"+item["images"]+"}", sender=item["sender"], brand=item["brand"]))
+        except (Exception, psycopg2.DatabaseError) as error:
+            print("error creating database: {0},".format(error))
+            print(item["storeUrl"])
+        finally:
+            self.client.commit()
+            #return item
